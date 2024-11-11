@@ -105,3 +105,38 @@ path = "src/{{package_name}}/__init__.py"
 [tool.hatch.build.targets.wheel]
 packages = ["src/{{package_name}}"]
 sources = ["src"]
+
+[tool.tox]
+min_version = "4"
+requires = ["tox>=4.19", "tox-uv>=1"]
+env_list = ["lint", "type", "3.13", "3.12", "3.11", "3.10", "3.9"]
+
+# This is a workaround
+# See Issue: https://github.com/ymyzk/tox-gh-actions/issues/198
+[tool.tox.gh-actions]
+python = """
+	3.8: py38
+	3.9: py39
+	3.10: py310
+	3.11: py311
+	3.12: py312
+	"""
+
+[env_run_base]
+description = "run unit tests"
+deps = [
+    "pytest>=8",
+    "pytest-sugar"
+]
+commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
+
+[env.lint]
+description = "run linters"
+skip_install = true
+deps = ["ruff"]
+commands = [["ruff format", { replace = "posargs", default = ["."], extend = true} ]]
+
+[env.type]
+description = "run type checks"
+deps = ["mypy"]
+commands = [["mypy", { replace = "posargs", default = ["src", "tests"], extend = true} ]]
