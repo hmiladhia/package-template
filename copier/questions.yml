@@ -32,3 +32,10 @@ organisation:
 author:
     type: str
     help: What is your name? 
+
+
+# -- Tools --
+use_precommit:
+    type: bool
+    default: true
+    help: Do you want to use pre-commit?
