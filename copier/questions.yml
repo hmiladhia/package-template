@@ -13,7 +13,7 @@ package_name:
     default: "{{ project_slug | replace('-', '_') }}"
     validator: >-
         {% if not (package_name | regex_search('^[a-zA-Z_][a-zA-Z0-9\-_]+$')) %}
-        package_name must start with a letter, followed one or more letters, digits, dashes or undescores.
+        package_name must start with a letter, followed one or more letters, digits, dashes or underscores.
         {% endif %}
 
 distribution_name:
@@ -31,7 +31,7 @@ project_version:
     default: "0.0.1"
     validator: >-
         {% if not (project_version | regex_search('^\d+\.\d+\.\d+$')) %}
-        project_version must respect semantic versionning format "MAJOR.MINOR.PATCH".
+        project_version must respect semantic versioning format "MAJOR.MINOR.PATCH".
         {% endif %}
 
 organisation:
@@ -40,7 +40,7 @@ organisation:
 
 author:
     type: str
-    help: What is your name? 
+    help: What is your name?
 
 linting_level:
     type: int
