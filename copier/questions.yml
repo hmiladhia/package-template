@@ -25,6 +25,15 @@ distribution_name:
         distribution_name must start with a letter, followed one or more letters, digits or dashes.
         {% endif %}
 
+project_version:
+    type: str
+    help: What is the version of your Python project?
+    default: "0.0.1"
+    validator: >-
+        {% if not (project_version | regex_search('^\d+\.\d+\.\d+$')) %}
+        project_version must respect semantic versionning format "MAJOR.MINOR.PATCH".
+        {% endif %}
+
 organisation:
     type: str
     help: What is your Github organisation or username ?
