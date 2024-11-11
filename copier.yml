@@ -7,5 +7,9 @@
 !include copier/questions.yml
 
 ---
+# -- Tools --
+!include copier/tools.yml
+
+---
 # -- Messages --
 !include copier/messages.yml

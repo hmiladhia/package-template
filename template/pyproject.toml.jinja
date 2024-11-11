@@ -106,10 +106,20 @@ path = "src/{{package_name}}/__init__.py"
 packages = ["src/{{package_name}}"]
 sources = ["src"]
 
+{% if use_mypy -%}
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+strict = true
+ignore_missing_imports = true
+{%- endif %}
+
+{% if use_tox -%}
 [tool.tox]
 min_version = "4"
-requires = ["tox>=4.19", "tox-uv>=1"]
-env_list = ["lint", "type", "3.13", "3.12", "3.11", "3.10", "3.9"]
+requires = ["tox>=4.19"{% if use_uv %}, "tox-uv>=1"{% endif %}]
+env_list = ["lint"{% if use_mypy -%}, "type"{% endif %}, "3.13", "3.12", "3.11", "3.10", "3.9"]
 
 # This is a workaround
 # See Issue: https://github.com/ymyzk/tox-gh-actions/issues/198
@@ -136,7 +146,10 @@ skip_install = true
 deps = ["ruff"]
 commands = [["ruff format", { replace = "posargs", default = ["."], extend = true} ]]
 
+{% if use_mypy -%}
 [env.type]
 description = "run type checks"
 deps = ["mypy"]
 commands = [["mypy", { replace = "posargs", default = ["src", "tests"], extend = true} ]]
+{%- endif %}
+{%- endif %}

@@ -1,0 +1,19 @@
+use_precommit:
+    type: bool
+    default: true
+    help: Do you want to use pre-commit?
+
+use_mypy:
+    type: bool
+    default: true
+    help: Do you want to use mypy?
+
+use_tox:
+    type: bool
+    default: true
+    help: Do you want to use tox?
+
+use_uv:
+    type: bool
+    default: true
+    help: Do you want to use uv?
