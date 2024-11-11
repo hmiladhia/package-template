@@ -132,7 +132,7 @@ python = """
 	3.12: py312
 	"""
 
-[env_run_base]
+[tool.tox.env_run_base]
 description = "run unit tests"
 deps = [
     "pytest>=8",
@@ -140,14 +140,14 @@ deps = [
 ]
 commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
 
-[env.lint]
+[tool.tox.env.lint]
 description = "run linters"
 skip_install = true
 deps = ["ruff"]
 commands = [["ruff format", { replace = "posargs", default = ["."], extend = true} ]]
 
 {% if use_mypy -%}
-[env.type]
+[tool.tox.env.type]
 description = "run type checks"
 deps = ["mypy"]
 commands = [["mypy", { replace = "posargs", default = ["src", "tests"], extend = true} ]]
