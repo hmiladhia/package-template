@@ -122,17 +122,17 @@ ignore_missing_imports = true
 [tool.tox]
 min_version = "4"
 requires = ["tox>=4.19"{% if use_uv %}, "tox-uv>=1"{% endif %}]
-env_list = ["lint"{% if use_mypy -%}, "type"{% endif %}, "3.13", "3.12", "3.11", "3.10", "3.9"]
+env_list = ["format", "lint"{% if use_mypy -%}, "type"{% endif %}, "3.13", "3.12", "3.11", "3.10", "3.9"]
 
 # This is a workaround
 # See Issue: https://github.com/ymyzk/tox-gh-actions/issues/198
 [tool.tox.gh-actions]
 python = """
-	3.8: py38
 	3.9: py39
 	3.10: py310
 	3.11: py311
 	3.12: py312
+	3.13: py313
 	"""
 
 [tool.tox.env_run_base]
@@ -143,11 +143,17 @@ deps = [
 ]
 commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
 
+[tool.tox.env.format]
+description = "run formatter"
+skip_install = true
+deps = ["ruff"]
+commands = [["ruff", "format", { replace = "posargs", default = ["."], extend = true} ]]
+
 [tool.tox.env.lint]
 description = "run linters"
 skip_install = true
 deps = ["ruff"]
-commands = [["ruff format", { replace = "posargs", default = ["."], extend = true} ]]
+commands = [["ruff", "check", { replace = "posargs", default = ["."], extend = true} ]]
 
 {% if use_mypy -%}
 [tool.tox.env.type]
