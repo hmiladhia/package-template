@@ -21,12 +21,13 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/{{organisation}}/{{project_name}}"
-Issues = "https://github.com/{{organisation}}/{{project_name}}/issues"
+Repository = "https://github.com/{{ organisation }}/{{ project_slug }}"
+Issues = "https://github.com/{{ organisation }}/{{ project_slug }}/issues"
 
 [tool.ruff]
 target-version = "py39"
 
+{%- if linting_level > 0 %}
 [tool.ruff.lint]
 select = [
   "A", # flake8-builtins
@@ -43,6 +44,7 @@ select = [
   "PLR", # Pylint Refactor
   "Q", # flake8-quotes
 ]
+{% if linting_level > 1 -%}
 extend-select = [
     "ARG", # flake8-unused-arguments
     "ASYNC", # flake8-async
@@ -86,17 +88,21 @@ extend-ignore = [
   "ISC001", # flake8-implicit-str-concat - single-line-implicit-string-concatenation
   "TD002", # flake8-todos - missing-todo-author
 ]
+{%- endif %}
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**.py" = ["S101", "ANN201"]
+"tests/**.py" = ["S101"{% if linting_level > 1 %}, "ANN201"{% endif %}]
+{%- if linting_level > 1 %}
 "!tests/**.py" = ["PT"]
+{%- endif %}
+
+[tool.ruff.lint.mccabe]
+max-complexity = 6
+{%- endif %}
 
 [tool.ruff.lint.pycodestyle]
 max-line-length = 100
 ignore-overlong-task-comments = true
-
-[tool.ruff.lint.mccabe]
-max-complexity = 6
 
 [build-system]
 requires = ["hatchling"]

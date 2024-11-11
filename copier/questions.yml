@@ -41,3 +41,12 @@ organisation:
 author:
     type: str
     help: What is your name? 
+
+linting_level:
+    type: int
+    help: What level of severity to use for linting rules ?
+    choices:
+        minimal: 0
+        moderate: 1
+        extensive: 2
+    default: 1
