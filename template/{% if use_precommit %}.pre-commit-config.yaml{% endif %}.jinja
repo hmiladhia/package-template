@@ -43,11 +43,9 @@ repos:
         types: [text]
         exclude: "CHANGELOG.md"
 
-{% if use_mypy %}
+{% if use_mypy -%}
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.13.0
     hooks:
     -   id: mypy
-{% endif %}
-
-
+{%- endif %}
