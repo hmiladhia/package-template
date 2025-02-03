@@ -25,6 +25,10 @@ distribution_name:
         distribution_name must start with a letter, followed one or more letters, digits or dashes.
         {% endif %}
 
+project_description:
+    type: str
+    help: What is your project description?
+
 project_version:
     type: str
     help: What is the version of your Python project?
