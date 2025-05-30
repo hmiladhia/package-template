@@ -15,25 +15,8 @@ jobs:
     steps:
       - name: 🛎️ Checkout
         uses: actions/checkout@v4
-
-      - name: 📂 Cache pre-commit paths
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/pip
-            $RUNNER_TOOL_CACHE/Python/*
-            ~/.cache/pre-commit
-
-          key: >-
-            os-${{ runner.os }}-
-            pyv-${{ hashFiles('.python-version') }}-
-            config-${{ hashFiles('.pre-commit-config.yaml') }}
-
-      - name: 🧰 Install uv
-        uses: astral-sh/setup-uv@v3
-
       - name: 🏃 Run Pre-commit
-        run: uvx --with pre-commit-uv pre-commit run --all-files
+        uses: tox-dev/action-pre-commit-uv@v1
 
   tests:
     name: 🧪 Tests
