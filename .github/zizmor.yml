@@ -1,0 +1,6 @@
+rules:
+  unpinned-uses:
+    ignore: 
+      - quality.yaml
+      - publish.yaml
+      
