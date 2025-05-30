@@ -1,0 +1,12 @@
+[project]
+name = "package-template"
+version = "0.1.0"
+description = "A copier-based python package template"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["copier"]
+
+[dependency-groups]
+dev = [{ include-group = "tests" }]
+tests = ["pytest>=8.3.5", "pytest-copie"]
+
