@@ -31,3 +31,12 @@ python = """
 description = "run unit tests"
 dependency_groups = ["tests"]
 commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
+
+
+# == Other Tools ==
+[tool.commitizen]
+tag_format = "v${version}"
+version_scheme = "semver"
+version_provider ="scm"
+update_changelog_on_bump = true
+changelog_merge_prerelease = true
