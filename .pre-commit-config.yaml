@@ -33,3 +33,9 @@ repos:
         language: python
         types: [text]
         exclude: "CHANGELOG.md"
+        args: ["-L", "copie"]
+
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.8.0
+    hooks:
+      - id: zizmor
