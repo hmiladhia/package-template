@@ -38,13 +38,20 @@ project_version:
         project_version must respect semantic versioning format "MAJOR.MINOR.PATCH".
         {% endif %}
 
-organisation:
+github_user:
     type: str
     help: What is your Github organisation or username ?
+    default: "{{ github_user | default('') }}"
 
-author:
+user_name:
     type: str
     help: What is your name?
+    default: "{{ user_name | default('') }}"
+
+user_email:
+    type: str
+    help: What is your e-mail?
+    default: "{{ user_email | default('') }}"
 
 linting_level:
     type: int
@@ -54,3 +61,13 @@ linting_level:
         moderate: 1
         extensive: 2
     default: 1
+
+
+license:
+    type: str
+    help: What License do you want to use ?
+    choices:
+        None: none
+        MIT: mit
+
+    default: "mit"

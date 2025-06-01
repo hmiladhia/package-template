@@ -4,10 +4,10 @@ version = "0.1.0"
 description = "A copier-based python package template"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["copier"]
+dependencies = []
 
 [dependency-groups]
-dev = [{ include-group = "tests" }]
+dev = ["copier", "jinja2-time>=0.2.0", { include-group = "tests" }]
 tests = ["pytest>=8.3.5", "pytest-copie"]
 
 # == Testing config ==
@@ -29,15 +29,22 @@ python = """
 
 [tool.tox.env_run_base]
 description = "run unit tests"
-dependency_groups = ["tests"]
-commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
+dependency_groups = ["dev", "tests"]
+commands = [
+	[
+		"pytest",
+		{ replace = "posargs", default = [
+			"tests",
+		], extend = true },
+	],
+]
 
 
 # == Other Tools ==
 [tool.commitizen]
 tag_format = "v${version}"
 version_scheme = "semver"
-version_provider ="scm"
+version_provider = "scm"
 update_changelog_on_bump = true
 changelog_merge_prerelease = true
 

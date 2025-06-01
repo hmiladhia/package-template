@@ -1,1 +1,4 @@
 _subdirectory: template
+
+_jinja_extensions:
+    - jinja2_time.TimeExtension
