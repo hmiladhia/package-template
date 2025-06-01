@@ -6,8 +6,8 @@ def default_config() -> dict[str, int | str | bool]:
     return {
         "project_name": "Test Project",
         "project_description": "A fake project to test the copier template",
-        "organisation": "fake-org",
-        "author": "ME",
+        "github_user": "fake-org",
+        "use_name": "ME",
     }
 
 
