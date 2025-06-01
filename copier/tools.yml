@@ -3,17 +3,17 @@ use_precommit:
     default: true
     help: Do you want to use pre-commit?
 
-use_mypy:
-    type: bool
-    default: true
-    help: Do you want to use mypy?
-
 use_tox:
     type: bool
     default: true
     help: Do you want to use tox?
 
-use_uv:
+use_commitizen:
     type: bool
     default: true
-    help: Do you want to use uv?
+    help: Do you want to use commitizen?
+
+use_mypy:
+    type: bool
+    default: false
+    help: Do you want to use mypy?
