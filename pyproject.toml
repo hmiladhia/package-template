@@ -40,3 +40,6 @@ version_scheme = "semver"
 version_provider ="scm"
 update_changelog_on_bump = true
 changelog_merge_prerelease = true
+
+name = "cz_gitmoji"
+bump_message = "🔖 version $current_version → $new_version"
