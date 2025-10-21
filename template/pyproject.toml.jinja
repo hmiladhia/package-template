@@ -1,8 +1,10 @@
 [project]
 name = "{{ distribution_name }}"
-{%- if user_email %}authors = [
+{%- if user_name %}
+authors = [
   {name = "{{ user_name }}"{%- if user_email %}, email = "{{ user_email }}"{% endif -%}},
-]{% endif -%}
+]
+{%- endif %}
 description = "{{ project_description }}"
 {% if license != "none" %}license = { file = "LICENSE" }
 {% endif %}requires-python = ">=3.9"
@@ -13,11 +15,11 @@ classifiers = [
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 
 [project.urls]
@@ -25,13 +27,25 @@ Repository = "https://github.com/{{ github_user }}/{{ project_slug }}"
 Issues = "https://github.com/{{ github_user }}/{{ project_slug }}/issues"
 
 [dependency-groups]
-dev = [{ include-group = "tests" }]
+dev = [{ include-group = "tests" }, { include-group = "workspace" }]
+workspace = ["{{ distribution_name }}"]
 tests = [
     "pytest>=8.3.4",
-    "pytest-sugar"
+    "pytest-sugar",
+    { include-group = "workspace" }
 ]
-ci = ["coverage"]
+ci = ["coverage", { include-group = "tests" }]
 linting = ["ruff==0.11.*", "mypy==0.16.*"]
+
+{%if is_multi_package -%}
+# == Dependency Management ==
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+{{ distribution_name }} = { workspace = true }
+
+{% endif -%}
 
 # == Build and Environment Config ==
 [build-system]
@@ -41,10 +55,23 @@ build-backend = "hatchling.build"
 [tool.hatch.version]
 path = "src/{{package_name}}/__init__.py"
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/packages/",
+    "/plugins/",
+    "tests/",
+    ".github/",
+    "uv.lock",
+    ".pre-commit-config.yaml",
+    ".copier-answers.yml",
+    ".gitignore",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/{{package_name}}"]
-sources = ["src"]
 
+[tool.hatch.build.targets.wheel.sources]
+"src/{{package_name}}" = "{{package_name}}"
 
 {% if use_commitizen -%}
 [tool.commitizen]
@@ -55,13 +82,14 @@ changelog_merge_prerelease = true
 version_files = [
     "src/{{package_name}}/__init__.py:__version__",
 ]
-{% endif %}
 
-# == Workspace Tools ==
+{% endif -%}
+
+# == Linting Rules ==
 [tool.ruff]
 target-version = "py39"
 
-{%- if linting_level > 0 %}
+{% if linting_level > 0 %}
 [tool.ruff.lint]
 select = [
   "A", # flake8-builtins
@@ -115,7 +143,6 @@ extend-select = [
     "PT" # flake8-pytest-style ( Only use in tests )
 ]
 extend-ignore = [
-  "ANN101", # flake8-annotations - missing-type-self
   "D1", # pydocstyle - missing-docstring
   "D203", # pydocstyle - one-blank-line-before-class
   "D212", # multi-line-summary-first-line
@@ -125,19 +152,21 @@ extend-ignore = [
 {%- endif %}
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**.py" = ["S101"{% if linting_level > 1 %}, "ANN201"{% endif %}]
-{%- if linting_level > 1 %}
-"!tests/**.py" = ["PT"]
-{%- endif %}
+
+"**/tests/**.py" = ["S101"{% if linting_level > 1 %}, "ANN201"{% endif %}]
+{% if linting_level > 1 -%}
+"!**/tests/**.py" = ["PT"]
+
+{% endif -%}
 
 [tool.ruff.lint.mccabe]
 max-complexity = 6
-{%- endif %}
+
+{% endif -%}
 
 [tool.ruff.lint.pycodestyle]
 max-line-length = 100
 ignore-overlong-task-comments = true
-
 
 {% if use_mypy -%}
 [tool.mypy]
@@ -146,34 +175,36 @@ warn_return_any = true
 warn_unused_configs = true
 strict = true
 ignore_missing_imports = true
-{%- endif %}
+{% endif -%}
 
 # == Tests config ==
 [tool.coverage.run]
 source = ["src"]
 relative_files = true
+branch = true
 
 {% if use_tox -%}
 [tool.tox]
 min_version = "4"
-requires = ["tox>=4.19", "tox-uv>=1"]
-env_list = ["format", "lint", "type", "3.13", "3.12", "3.11", "3.10", "3.9"]
+requires = ["tox>=4.31", "tox-uv>=1.29.0"]
+env_list = ["format", "lint", "type", "3.14", "3.13", "3.12", "3.11", "3.10"]
 
 # This is a workaround
 # See Issue: https://github.com/ymyzk/tox-gh-actions/issues/198
 [tool.tox.gh-actions]
 python = """
-	3.9: py39
 	3.10: py310
 	3.11: py311
 	3.12: py312
 	3.13: py313
+  3.14: py314
 	"""
 
 [tool.tox.env_run_base]
+runner = "uv-venv-lock-runner"
 description = "run unit tests"
 dependency_groups = ["tests"]
-commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
+commands = [["pytest", { replace = "posargs", default = ["."], extend = true }]]
 
 [tool.tox.env.format]
 description = "run formatter"
@@ -191,6 +222,6 @@ commands = [["ruff", "check", { replace = "posargs", default = ["."], extend = t
 [tool.tox.env.type]
 description = "run type checks"
 dependency_groups = ["linting"]
-commands = [["mypy", { replace = "posargs", default = ["src", "tests"], extend = true} ]]
+commands = [["mypy", { replace = "posargs", default = ["src"], extend = true} ]]
 {%- endif %}
 {%- endif %}

@@ -62,7 +62,6 @@ linting_level:
         extensive: 2
     default: 1
 
-
 license:
     type: str
     help: What License do you want to use ?
@@ -71,3 +70,17 @@ license:
         MIT: mit
 
     default: "mit"
+
+is_multi_package:
+    type: bool
+    help: Will you have multiple packages in the repository ?
+    default: False
+
+publish_condition:
+    type: str
+    help: "Publish Condition:"
+    default: "release"
+    choices:
+        None: "none"
+        "On Release": "release"
+        "On Push": "push"
